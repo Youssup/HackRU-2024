@@ -159,5 +159,5 @@ function verifyJWT(token) {
 
 // Javascript exporting shiz
 module.exports = {
-    getAllUsers, getById, getByEmail, searchUser, registerUser, loginUser, updateUser, removeUser, generateJWT, verifyJWT
+    getAllUsers, getById, getByEmail, searchUser, createUser, registerUser, loginUser, updateUser, removeUser, generateJWT, verifyJWT
 }
