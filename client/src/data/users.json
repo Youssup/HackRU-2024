@@ -1,0 +1,40 @@
+{
+    "users": [
+        {
+            "id": 0,
+            "firstName": "Test",
+            "lastName": "User",
+            "friends": [1],
+            "events": [
+                {
+                    "eventId": 1,
+                    "eventName": "Example Event",
+                    "eventColor": "#FF0000",
+                    "eventDescription": "This is an example event",
+                    "eventLocation": {
+                        "address": "123 Main St",
+                        "city": "Exampleville",
+                        "coordinates": {
+                            "latitude": 40.7128,
+                            "longitude": -74.0060
+                        },
+                        "postalCode": "10001",
+                        "state": "NY"
+                    },
+                    "eventStartDate": "2024-03-28T00:00:00.000Z",
+                    "eventEndDate": "2024-03-29T00:00:00.000Z",
+                    "eventStartTime": "2024-03-28T09:00:00.000Z",
+                    "eventEndTime": "2024-03-28T17:00:00.000Z",
+                    "eventIsAllDay": false,
+                    "invited": [1]
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "firstName": "Sample",
+            "lastName": "Example",
+            "friends": [0]
+        }
+    ]
+}
