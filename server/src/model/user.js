@@ -10,6 +10,7 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 // OBJECTS \\ 
 const BaseUser = {
+    userName: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -66,6 +67,7 @@ function searchUser(query) {
         return (
              x.firstName.toLowerCase().includes(query.toLowerCase()) ||
              x.lastName.toLowerCase().includes(query.toLowerCase()) ||
+             x.userName.toLowerCase().includes(query.toLowerCase()) ||
              x.email.toLowerCase().includes(query.toLowerCase())
         );
     });
@@ -91,12 +93,12 @@ function getByEmail(email) {
     return user;
 }
 
-function createUser(data) {
+function createUser(inputData) {
     const id = data.users.length + 1;
 
     const newUser = {
         id: id,
-        ...data
+        ...inputData
     }
 
     data.users.push(newUser);
@@ -104,27 +106,32 @@ function createUser(data) {
     return newUser;
 }
 
-// this function is used to create the user wtih validation
-function registerUser(data) {
-    if (data.password.length < 12) {
+// this function is used to create the user with validation
+function registerUser(inputData) {
+    if (inputData.password.length < 12) {
         throw new Error("Password must be 12 characters long!")
     }
-    
-    const userExists = getByEmail(data.email);
 
-    if (userExists) {
-        throw new Error("User already exists with this email!")
+    const exists = data.users.some(us => us.userName === inputData.userName);
+
+    if (exists) {
+        throw new Error("User already exists with this username!")
     }
 
-    createUser(data);
+    const id = data.users.length + 1;
+
+    const newUser = {
+        id: id,
+        ...inputData
+    }
+
+    data.users.push(newUser);
+
+    return newUser;
 }
 
 async function loginUser(email, password) {
     const userExists = getByEmail(email);
-
-    if (!userExists) {
-        throw new Error("This user does not exist!");
-    }
 
     if (userExists.password != password) {
         throw new Error("Incorrect login!");
@@ -174,6 +181,22 @@ function getUserEvents(id) {
     return userEvents;
 }
 
+function getUserEventById(userId, eventId) {
+    const user = getById(userId);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const event = user.events.find(event => event.eventId === eventId);
+
+    if (!event) {
+        throw new Error("Event not found!");
+    }
+
+    return event;
+}
+
 function getInvitedEvents(id) {
     const user = getById(id);
 
@@ -195,6 +218,65 @@ function getInvitedEvents(id) {
     });
 
     return invitedEvents;
+}
+
+// create event
+async function createEvent(id, event) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    // TODO: check if this event already exists?
+
+    const newEvent = {
+        id: user.events?.length + 1,
+        ...event,
+    };
+
+    user.events.push(newEvent);
+
+    return newEvent;
+}
+
+// delete event
+async function deleteEvent(id, eventId) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const eventIndex = user.events.findIndex(event => event.eventId === eventId);
+
+    if (eventIndex === -1) {
+        throw new Error("Event not found!");
+    }
+
+    user.events.splice(eventIndex, 1);
+}
+
+// update event
+async function updateEvent(id, event) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const eventIndex = user.events.findIndex(e => e.eventId === event.eventId);
+
+    if (eventIndex === -1) {
+        throw new Error("Event not found!");
+    }
+
+    user.events[eventIndex] = {
+        ...user.events[eventIndex],
+        ...event,
+    };
+
+    return user.events[eventIndex];
 }
 
 // friends
@@ -243,5 +325,5 @@ function verifyJWT(token) {
 // Javascript exporting shiz
 module.exports = {
     getAllUsers, getById, getByEmail, searchUser, createUser, registerUser, loginUser, updateUser, removeUser, generateJWT, verifyJWT,
-    getUserFriends, getInvitedEvents
+    getUserFriends, getInvitedEvents, getUserEvents, getUserEventById, createEvent, deleteEvent, updateEvent
 }
