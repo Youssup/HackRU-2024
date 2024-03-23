@@ -54,3 +54,11 @@ export async function doesUsernameExist(userName: string): Promise<boolean> {
 
   return users.some(user => user.userName === userName);
 }
+
+export async function getUserEvents(email: string): Promise<Event[] | undefined> {
+  const users = await getUsers();
+
+  const newUser = users.find(us => us.email === email);
+
+  return newUser?.events;
+}
