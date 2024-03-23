@@ -93,12 +93,12 @@ function getByEmail(email) {
     return user;
 }
 
-function createUser(data) {
+function createUser(inputData) {
     const id = data.users.length + 1;
 
     const newUser = {
         id: id,
-        ...data
+        ...inputData
     }
 
     data.users.push(newUser);
@@ -106,27 +106,32 @@ function createUser(data) {
     return newUser;
 }
 
-// this function is used to create the user wtih validation
-function registerUser(data) {
-    if (data.password.length < 12) {
+// this function is used to create the user with validation
+function registerUser(inputData) {
+    if (inputData.password.length < 12) {
         throw new Error("Password must be 12 characters long!")
     }
-    
-    const userExists = getByEmail(data.email);
 
-    if (userExists) {
-        throw new Error("User already exists with this email!")
+    const exists = data.users.some(us => us.userName === inputData.userName);
+
+    if (exists) {
+        throw new Error("User already exists with this username!")
     }
 
-    createUser(data);
+    const id = data.users.length + 1;
+
+    const newUser = {
+        id: id,
+        ...inputData
+    }
+
+    data.users.push(newUser);
+
+    return newUser;
 }
 
 async function loginUser(email, password) {
     const userExists = getByEmail(email);
-
-    if (!userExists) {
-        throw new Error("This user does not exist!");
-    }
 
     if (userExists.password != password) {
         throw new Error("Incorrect login!");

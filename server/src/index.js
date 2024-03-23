@@ -1,7 +1,6 @@
 const express = require('express');
-
+require('dotenv').config();
 const userController = require('./controllers/usercontroller');
-
 const { requireUser, parseAuthorizationToken } = require("./middleware/authorization");
 
 const app = express();

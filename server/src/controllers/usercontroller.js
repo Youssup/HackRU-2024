@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllUsers, searchUser, getById, createUser, registerUser, updateUser, getUserFriends, getInvitedEvents, getUserEventById, createEvent, removeUser, deleteEvent, updateEvent } = require("../model/user");
+const { getAllUsers, searchUser, getById, createUser, registerUser, updateUser, getUserFriends, getInvitedEvents, getUserEventById, createEvent, removeUser, deleteEvent, updateEvent, loginUser } = require("../model/user");
 const { requireUser } = require('../middleware/authorization');
 
 const router = express.Router();
