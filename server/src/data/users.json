@@ -4,6 +4,8 @@
             "id": 0,
             "firstName": "Test",
             "lastName": "User",
+            "email": "test@mail.com",
+            "password": "testing123",
             "friends": [1],
             "events": [
                 {
@@ -34,7 +36,33 @@
             "id": 1,
             "firstName": "Sample",
             "lastName": "Example",
-            "friends": [0]
+            "email": "sample@testmail.com",
+            "password": "helloworld",
+            "friends": [0],
+            "events": [
+                {
+                    "eventId": 1,
+                    "eventName": "This is a test event",
+                    "eventColor": "#D033A9",
+                    "eventDescription": "hiiii!",
+                    "eventLocation": {
+                        "address": "1 Hawk Dr",
+                        "city": "New Paltz",
+                        "coordinates": {
+                            "latitude": 41.7476,
+                            "longitude": 74.0868
+                        },
+                        "postalCode": "12561",
+                        "state": "NY"
+                    },
+                    "eventStartDate": "2024-03-28T00:00:00.000Z",
+                    "eventEndDate": "2024-03-29T00:00:00.000Z",
+                    "eventStartTime": "2024-03-28T09:00:00.000Z",
+                    "eventEndTime": "2024-03-28T17:00:00.000Z",
+                    "eventIsAllDay": false,
+                    "invited": []
+                }
+            ]
         }
     ]
 }

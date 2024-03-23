@@ -1,13 +1,10 @@
 const express = require("express");
-const { getAllUsers, searchUser, getById, createUser, updateUser, getUserFriends, getInvitedEvents } = require("../model/user");
+const { getAllUsers, searchUser, getById, createUser, registerUser, updateUser, getUserFriends, getInvitedEvents, getUserEventById, createEvent, removeUser, deleteEvent } = require("../model/user");
 const { requireUser } = require('../middleware/authorization');
-const { register } = require("module");
 
 const router = express.Router();
 
 router.get('/', (request, response, next) => {
-
-    //TODO: remove, this is a security flaw
     response.send(getAllUsers());
 })
 .get('/friends/:id', (request, response, next) => {
@@ -27,20 +24,13 @@ router.get('/', (request, response, next) => {
 
     response.send(user);
 })
-.get('/:id/invitedto', (request, response, next) => {
-    const user = getById(+request.params.id);
-
-    const events = getInvitedEvents(user.id)
-
-    response.send(events);
-})
 .post('/', (request, response, next) => {
     const user = createUser(request.body);
 
     response.send(user);
 })
 .post('/register', (request, response, next) => {
-    const user = register(request.body);
+    const user = registerUser(request.body);
 
     response.send(user);
 })
@@ -50,7 +40,7 @@ router.get('/', (request, response, next) => {
         response.send(user);
     }).catch(next);
 })
-.patch('/:id', (request, response, next) => {
+.patch('/:id', requireUser(), (request, response, next) => {
     const loggedInUserId = request.user.id;
     const targettedUser = +request.params.id;
 
@@ -67,7 +57,7 @@ router.get('/', (request, response, next) => {
 
     response.send(user);
 })
-.delete('/:id', (request, response, next) => {
+.delete('/:id', requireUser(), (request, response, next) => {
     const loggedInUserId = request.user.id;
     const targettedUser = +request.params.id;
 
@@ -78,9 +68,50 @@ router.get('/', (request, response, next) => {
         });
     }
 
-    remove(targettedUser);
+    removeUser(targettedUser);
     
     response.send({message: "User was removed."});
+})
+// events
+.get('/:userid/:eventid', (request, response, next) => {
+    const user = getById(+request.params.userid);
+
+    const event = getUserEventById(user.id, +request.params.eventid);
+
+    response.send(event);
+})
+.get('/:id/invitedto', (request, response, next) => {
+    const user = getById(+request.params.id);
+
+    const events = getInvitedEvents(user.id)
+
+    response.send(events);
+})
+.post('/event', requireUser(), (request, response, next) => {
+    if (!request.user) {
+        return next({
+            status: 403,
+            message: "Forbidden API usage."
+        });
+    }
+
+    const newEvent = createEvent(request.user.id, request.body)
+
+    response.send(newEvent);
+})
+.delete('/event/:id', requireUser(), (request, response, next) => {
+    if (!request.user) {
+        return next({
+            status: 403,
+            message: "Forbidden API usage."
+        });
+    }
+
+    const event = getUserEventById(+request.params.id);
+
+    deleteEvent(request.user.id, event);
+
+    response.send({message: "Event was removed."});
 })
 
 module.exports = router;
