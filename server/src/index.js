@@ -1,4 +1,5 @@
 const express = require('express');
+const userController = require('./controllers/usercontroller');
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.use(express.json())
     }
 
     next();
-});
+})
+.use('/api/v1/users', userController);
 
 app.use((err, req, res, next) => {
         console.error(err);
