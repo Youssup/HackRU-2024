@@ -1,6 +1,7 @@
 const data = require("../data/users.json"); // data file
 
 const jswonwebtoken = require('jsonwebtoken');
+const dayjs = require('dayjs'); 
 
 // JWT \\
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -12,7 +13,9 @@ const BaseUser = {
     firstName: "",
     lastName: "",
     email: "",
-    password: ""
+    password: "",
+    friends: [],
+    events: []
 }
 
 const HasId = {
@@ -22,6 +25,34 @@ const HasId = {
 const User = {
     ...BaseUser,
     ...HasId,
+}
+
+// events objects below
+const Coordinates = {
+    latitude: 0,
+    longitude: 0
+}
+
+const Address = {
+    address: "",
+    city: "", // optional property
+    coordinates: Coordinates,
+    postalCode: "",
+    state: "",
+}
+
+const Event = {
+    eventId: 0,
+    eventName: "",
+    eventColor: "",
+    eventDescription: "",
+    eventLocation: Address,
+    eventStartDate: dayjs(),
+    eventEndDate: dayjs(),
+    eventStartTime: dayjs(),
+    eventEndTime: dayjs(),
+    eventIsAllDay: false,
+    invited: []
 }
 // OBJECTS \\ 
 
@@ -129,6 +160,58 @@ function removeUser(id) {
 
     data.users.splice(index, 1);
 }
+
+// events
+function getUserEvents(id) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const userEvents = user.events ?? [];
+
+    return userEvents;
+}
+
+function getInvitedEvents(id) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const friends = getUserFriends(id);
+    const invitedEvents = [];
+
+    friends.forEach(friend => {
+        if (friend.events) { 
+            friend.events.forEach(event => {
+                if (!invitedEvents.some(invitedEvent => invitedEvent.eventId === event.eventId) && event.ownerId !== id) {
+                    invitedEvents.push(event);
+                }
+            });
+        }
+    });
+
+    return invitedEvents;
+}
+
+// friends
+function getUserFriends(id) {
+    const user = getById(id);
+
+    if (!user) {
+        throw new Error("Cannot find that user!");
+    }
+
+    const friendsIds = user?.friends ?? [];
+
+    const friends = friendsIds.map(friendId => getById(friendId));
+
+    return friends;
+}
+
 // FUNCTIONS \\
 
 // JWT FUNCTIONS \\
@@ -159,5 +242,6 @@ function verifyJWT(token) {
 
 // Javascript exporting shiz
 module.exports = {
-    getAllUsers, getById, getByEmail, searchUser, createUser, registerUser, loginUser, updateUser, removeUser, generateJWT, verifyJWT
+    getAllUsers, getById, getByEmail, searchUser, createUser, registerUser, loginUser, updateUser, removeUser, generateJWT, verifyJWT,
+    getUserFriends, getInvitedEvents
 }

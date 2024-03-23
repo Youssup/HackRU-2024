@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllUsers, searchUser, getById, createUser, updateUser } = require("../model/user");
+const { getAllUsers, searchUser, getById, createUser, updateUser, getUserFriends, getInvitedEvents } = require("../model/user");
 const { requireUser } = require('../middleware/authorization');
 const { register } = require("module");
 
@@ -10,6 +10,13 @@ router.get('/', (request, response, next) => {
     //TODO: remove, this is a security flaw
     response.send(getAllUsers());
 })
+.get('/friends/:id', (request, response, next) => {
+    const user = getById(+request.params.id);
+
+    const friends = getUserFriends(user.id);
+
+    response.send(friends);
+})
 .get('/search', (request, response, next) => {
     const searchedResults = searchUser(request.query.q);
 
@@ -19,6 +26,13 @@ router.get('/', (request, response, next) => {
     const user = getById(+request.params.id);
 
     response.send(user);
+})
+.get('/:id/invitedto', (request, response, next) => {
+    const user = getById(+request.params.id);
+
+    const events = getInvitedEvents(user.id)
+
+    response.send(events);
 })
 .post('/', (request, response, next) => {
     const user = createUser(request.body);
