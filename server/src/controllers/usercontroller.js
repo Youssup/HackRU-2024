@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAllUsers, searchUser, getById, createUser, registerUser, updateUser, getUserFriends, getInvitedEvents, getUserEventById, createEvent, removeUser, deleteEvent } = require("../model/user");
+const { getAllUsers, searchUser, getById, createUser, registerUser, updateUser, getUserFriends, getInvitedEvents, getUserEventById, createEvent, removeUser, deleteEvent, updateEvent } = require("../model/user");
 const { requireUser } = require('../middleware/authorization');
 
 const router = express.Router();
@@ -112,6 +112,18 @@ router.get('/', (request, response, next) => {
     deleteEvent(request.user.id, event);
 
     response.send({message: "Event was removed."});
+})
+.patch('/event/:id', requireUser(), (request, response, next) => {
+    if (!request.user) {
+        return next({
+            status: 403,
+            message: "Forbidden API usage."
+        });
+    }
+
+    const event = updateEvent(request.user.id, +request.params.id);
+
+    response.send(event);
 })
 
 module.exports = router;
