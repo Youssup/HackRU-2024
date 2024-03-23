@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { getSession } from './models/session';
 import Navbar from './components/Navbar.vue';
+
+const session = getSession();
+
 </script>
 
 <template>

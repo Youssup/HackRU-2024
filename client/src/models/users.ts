@@ -1,12 +1,14 @@
-export interface Root {
-  users: User[];
-}
+import { api } from "./session";
 
 export interface User {
-  id: number;
+  id?: number;
   firstName: string;
   lastName: string;
+  userName: string;
+  email: string;
+  password: string;
   friends: number[];
+  token?: string;
   events?: Event[];
 }
 
@@ -15,7 +17,7 @@ export interface Event {
   eventName: string;
   eventColor: string;
   eventDescription: string;
-  eventLocation: EventLocation;
+  eventLocation: Address;
   eventStartDate: string;
   eventEndDate: string;
   eventStartTime: string;
@@ -24,7 +26,7 @@ export interface Event {
   invited: number[];
 }
 
-export interface EventLocation {
+export interface Address {
   address: string;
   city: string;
   coordinates: Coordinates;
@@ -35,4 +37,14 @@ export interface EventLocation {
 export interface Coordinates {
   latitude: number;
   longitude: number;
+}
+
+export function getUsers(): Promise<User[]> {
+  return api("users"); 
+}
+
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  const users = await getUsers();
+
+  return users.find(us => us.email === email);
 }
