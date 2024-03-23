@@ -48,3 +48,9 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 
   return users.find(us => us.email === email);
 }
+
+export async function doesUsernameExist(userName: string): Promise<boolean> {
+  const users = await getUsers();
+
+  return users.some(user => user.userName === userName);
+}
