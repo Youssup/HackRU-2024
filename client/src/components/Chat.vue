@@ -19,8 +19,8 @@ const closeModal = () => {
         </button>
 
         <div class="modal" :class="{ 'is-active': isModalActive }">
-            <div class="modal-background"></div>
-            <div class="modal-content">
+            <div @click="closeModal" class="modal-background">
+                <div class="modal-content">
                 <div id="chat-container">
                     <div>
                         <h1>OpenAI Chatbot</h1>
@@ -37,6 +37,7 @@ const closeModal = () => {
                 </div>
             </div>
             <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
+            </div>
         </div>
     </div>
 </template>
