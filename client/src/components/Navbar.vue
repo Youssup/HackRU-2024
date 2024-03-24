@@ -6,7 +6,8 @@ import Login from './LoginBadge.vue';
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a role="button" class="navbar-burger custom-text-color" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <a role="button" class="navbar-burger custom-text-color" aria-label="menu" aria-expanded="false"
+        data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -16,18 +17,14 @@ import Login from './LoginBadge.vue';
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <RouterLink to="/home" class="navbar-item" style="color: aliceblue;">
-          Home
+          <i class="fas fa-home" style="margin-right: 4px;"></i> Home
         </RouterLink>
         <RouterLink to="/calendar" class="navbar-item" style="color: aliceblue;">
-          Calendar
-        </RouterLink>
-        <RouterLink to="/suggestion" class="navbar-item" style="color: aliceblue;">
-          Suggestions
+          <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> Calendar
         </RouterLink>
       </div>
-
       <div class="navbar-end" style="margin-right: 15px;">
-        <Login/>
+        <Login />
       </div>
     </div>
   </nav>
@@ -41,9 +38,10 @@ import Login from './LoginBadge.vue';
 
 .navbar-item.router-link-exact-active {
   border-bottom: 2px solid #ffffff;
+  background-color: transparent;
 }
 
-.custom-text-color {
-  color: whitesmoke;
+.navbar-item:hover {
+  background-color: #2B3E4D;
 }
 </style>

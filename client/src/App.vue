@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { RouterView } from 'vue-router'
 import Navbar from './components/Navbar.vue';
 import Sidebar from './components/Sidebar.vue';
+import Chat from './components/Chat.vue';
 
 let isOpen = ref(false);
 
@@ -13,10 +14,11 @@ let isOpen = ref(false);
       <Navbar />
     </nav>
   </header>
-  <Sidebar :isOpen="isOpen"/>
+  <Sidebar :isOpen="isOpen" />
   <main>
     <RouterView />
   </main>
+  <Chat />
 </template>
 
 <style scoped></style>
