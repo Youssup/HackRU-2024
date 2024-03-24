@@ -8,9 +8,6 @@ const toggleCard = () => {
 const activeTab = ref('pictures');
 
 // function to show tab
-const showTab = (tabName) => {
-  activeTab.value = tabName;
-};
 </script>
 
 
@@ -41,10 +38,10 @@ const showTab = (tabName) => {
                         <li @click="toggleCard"><a><span>Videos</span></a></li>
                         <li @click="toggleCard"><a><span>Documents</span></a></li> -->
 
-                        <li @click="showTab('pictures')" :class="{ 'is-active': activeTab === 'pictures' }"><a><span>What is BetterCalendar</span></a></li>
-                        <li @click="showTab('music')" :class="{ 'is-active': activeTab === 'music' }"><a><span>How does it work</span></a></li>
-                        <li @click="showTab('videos')" :class="{ 'is-active': activeTab === 'videos' }"><a><span>A deeper look</span></a></li>
-                        <li @click="showTab('documents')" :class="{ 'is-active': activeTab === 'documents' }"><a><span>Documents</span></a></li>
+                        <li @click="" :class="{ 'is-active': activeTab === 'pictures' }"><a><span>What is BetterCalendar</span></a></li>
+                        <li @click="" :class="{ 'is-active': activeTab === 'music' }"><a><span>How does it work</span></a></li>
+                        <li @click="" :class="{ 'is-active': activeTab === 'videos' }"><a><span>A deeper look</span></a></li>
+                        <li @click="" :class="{ 'is-active': activeTab === 'documents' }"><a><span>Documents</span></a></li>
                     </ul>
                 </div>
             </nav>
