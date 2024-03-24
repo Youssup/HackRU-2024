@@ -9,7 +9,7 @@ module.exports = {
           return next();
         }
 
-        const payload = await usersModel.verifyJWT(token);
+        const payload = await modelUser.verifyJWT(token);
 
         request.user = payload;
 
