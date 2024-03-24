@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const path = require('path')
 const userController = require('./controllers/usercontroller');
+const googleController = require('./controllers/googlecontroller');
 const { requireUser, parseAuthorizationToken } = require("./middleware/authorization");
 
 const app = express();
@@ -28,6 +29,7 @@ app
 .use(parseAuthorizationToken)
 // userscontroller / user part of API
 .use('/api/v1/users', userController)
+.use('/api/v1/calculate', googleController)
 .get('*', (req, res) => {
     res.sendFile(path.join( __dirname, '../../client/dist/index.html'))
 });
