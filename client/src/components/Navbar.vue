@@ -24,10 +24,10 @@ function toggleMenu() {
     <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': isActive }" style="color: black;">
       <div class="navbar-start">
         <RouterLink to="/home" class="navbar-item" :class="{ 'is-active': isActive }" style="color: aliceblue;">
-          <i class="fas fa-home" style="margin-right: 4px; color: black;"></i> <a style="color: black;">Home</a>
+          <i class="fas fa-home" style="margin-right: 4px; color: aliceblue;"></i> <a style="color: aliceblue;">Home</a>
         </RouterLink>
         <RouterLink to="/calendar" class="navbar-item" :class="{ 'is-active': isActive }" style="color: aliceblue;">
-          <i class="fas fa-calendar-alt" style="margin-right: 4px; color: black;"></i> <a style="color: black;">Calendar</a>
+          <i class="fas fa-calendar-alt" style="margin-right: 4px; color: aliceblue;"></i> <a style="color: aliceblue;">Calendar</a>
         </RouterLink>
       </div>
       <div class="navbar-end" style="margin-right: 15px;">
