@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import Login from './LoginBadge.vue';
+import Sidebar from './Sidebar.vue';
 </script>
 
 <template>
@@ -13,11 +14,13 @@ import Login from './LoginBadge.vue';
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </a>
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
+        <Sidebar />
         <RouterLink to="/home" class="navbar-item custom-text-color">
           Home
         </RouterLink>
