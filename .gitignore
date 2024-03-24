@@ -160,3 +160,4 @@ Temporary Items
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+client/typed-router.d.ts

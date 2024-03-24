@@ -9,7 +9,7 @@ import { getUpcomingEvents, createEvent } from '../models/users';
 const calendarEl = ref(null);
 const session = getSession();
 
-let userEvents = session.events ?? [];
+let userEvents = ref(session.events ?? []);
 
 let calendar;
 const state = { calendarEl };
@@ -21,7 +21,7 @@ const { refresh } = useLogin()
 onMounted(async () => {
   await nextTick();
 
-  initializeCalendar(userEvents);
+  initializeCalendar(userEvents.value);
 
   // Fetch the next upcoming event and store its location
   const upcomingEvents = await getUpcomingEvents(session.user?.email || '', 1);
@@ -41,7 +41,8 @@ function initializeCalendar(inputEvents: Event[] | undefined) {
       center: 'prev,today,next',
       right: 'title'
     },
-    events: inputEvents || []
+    events: inputEvents || [],
+    eventClick: handleEventClick
   });
   calendar.render();
 }
@@ -73,39 +74,54 @@ const endTime = ref(0);
     invited: []
 */
 
+const selectedEventModal = ref(false);
+const selectedEvent = ref(null);
+function openSelectedEventModal() {
+  selectedEventModal.value = true;
+}
+function closeSelectedEventModal() {
+  selectedEventModal.value = false;
+}
+function handleEventClick(info: any) {
+  selectedEvent.value = info.event;
+  openSelectedEventModal();
+}
+
 async function handleCreateEvent() {
   const startDateTime = new Date(startDate.value + 'T' + startTime.value); // startDateTime.toISOString(); 
   const endDateTime = new Date(endDate.value + 'T' + endTime.value); // endDateTime.toISOString(); 
-    try {
-        const newEvent = await createEvent({
-            title: name.value,
-            start: startDateTime.toISOString().slice(0, -5),
-            end: endDateTime.toISOString().slice(0, -5),
-            description: "", // You might want to add a description here if needed
-            color: "#0000FF",
-            location: {
-                address: location.value,
-                city: "", // Add city if needed
-                coordinates: {
-                    latitude: 0, // Add latitude if needed
-                    longitude: 0 // Add longitude if needed
-                },
-                postalCode: "", // Add postal code if needed
-                state: "" // Add state if needed
-            },
-            invited: [],
-            id: session.user?.id
-        });
+  try {
+    const newEvent = await createEvent({
+      title: name.value,
+      start: startDateTime.toISOString().slice(0, -5),
+      end: endDateTime.toISOString().slice(0, -5),
+      description: "", // You might want to add a description here if needed
+      color: "#0000FF",
+      location: {
+        address: location.value,
+        city: "", // Add city if needed
+        coordinates: {
+          latitude: 0, // Add latitude if needed
+          longitude: 0 // Add longitude if needed
+        },
+        postalCode: "", // Add postal code if needed
+        state: "" // Add state if needed
+      },
+      invited: [],
+      id: session.user?.id
+    });
 
-        userEvents.push(newEvent);
+    userEvents.value.push(newEvent);
 
-        await refresh();
+    await refresh();
 
-        closeEventModal();
-    } catch (error) {
-        console.error('Error creating user:', error);
-    }
+    closeEventModal();
+  } catch (error) {
+    console.error('Error creating user:', error);
+  }
 }
+
+
 </script>
 
 <template>
@@ -154,6 +170,29 @@ async function handleCreateEvent() {
     </div>
     <button @click="closeEventModal" class="modal-close is-large" aria-label="close"></button>
   </div>
+
+
+  <!-- Selected Event Modal -->
+  <div class="modal" :class="{ 'is-active': selectedEventModal }" v-if="selectedEvent">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <p><strong>Event Name:</strong> {{ (selectedEvent as any).title }}</p>
+              <p><strong>Location:</strong> {{ (selectedEvent as any).location.address }}</p>
+              <p><strong>Start:</strong> {{ (selectedEvent as any)?.start }}</p>
+              <p><strong>End:</strong> {{ (selectedEvent as any)?.end }}</p>
+              <p><strong>Description:</strong> {{ (selectedEvent as any)?.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button @click="closeSelectedEventModal" class="modal-close is-large" aria-label="close"></button>
+  </div>
+
 </template>
 
 <style scoped>
