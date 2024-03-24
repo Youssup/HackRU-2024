@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import * as MyFetch from "./myfetch";
-import { type User } from "./users"
+import { type User, getUserFriends } from "./users"
 
 const session = reactive({
     user: null as User | null,
@@ -11,6 +11,7 @@ const session = reactive({
       type: string,
       text: string
     }[],
+    friends: null as User[] | null
 })
 
 export function api(action: string, body?: unknown, method?: string, headers?: any) {
@@ -40,6 +41,7 @@ export function useLogin() {
 
       session.user = response?.user;
       session.token = response.token;
+      session.friends = await getUserFriends(response?.user) || [];
 
       router.push("/home");
 

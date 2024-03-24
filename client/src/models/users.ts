@@ -96,3 +96,17 @@ export async function getUserByID(id: number): Promise<User | undefined> {
 
   return users.find((us) => us.id === id);
 }
+
+export async function getUserFriends(passedUser: User): Promise<User[] | undefined> {
+  const user = passedUser;
+  
+  if (!user) return undefined; // Return undefined if the user doesn't exist
+  
+  const users = await getUsers();
+  
+  const friendsIds: number[] = user.friends ?? [];
+  
+  const friends: User[] = users.filter(u => friendsIds.includes(u.id ?? -1)); // Filter users based on friend IDs
+  
+  return friends;
+}

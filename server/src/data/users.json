@@ -6,7 +6,7 @@
       "lastName": "User",
       "email": "test@mail.com",
       "password": "testing123",
-      "friends": [1],
+      "friends": [2],
       "events": [
         {
           "title": "Example Event",

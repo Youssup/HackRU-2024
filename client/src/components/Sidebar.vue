@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { getSession } from '../models/session'
-import { getUserByID } from '../models/users';
+
 const props = defineProps<{
-  isOpen?: boolean
-}>()
-props;
+    isOpen: boolean
+}>();
 
 const session = getSession();
-const getUser = async (id: number) => {
-  const user = await getUserByID(id);
-  return user ? user : { firstName: '', lastName: '' }; // Return empty object if user not found
-}
 
 </script>
 
@@ -22,10 +17,9 @@ const getUser = async (id: number) => {
       </p>
       <div class="panel-block">
         <input class="input is-primary" type="text" placeholder="Find Friends!" />
-
       </div>
-      <a v-for="id in session.user?.friends" :key="id" class="panel-block">
-        {{ getUser(id).firstName }} {{ friend?.lastName }}
+      <a v-for="friend in session.friends" :key="friend.id" class="panel-block">
+          {{ friend.firstName }} {{ friend.lastName }}
       </a>
     </article>
   </div>
