@@ -15,6 +15,7 @@ import Sidebar from './Sidebar.vue';
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </a>
     </div>
 
@@ -26,6 +27,9 @@ import Sidebar from './Sidebar.vue';
         </RouterLink>
         <RouterLink to="/calendar" class="navbar-item custom-text-color">
           Calendar
+        </RouterLink>
+        <RouterLink to="/suggestion" class="navbar-item custom-text-color">
+          Suggestions
         </RouterLink>
       </div>
 
