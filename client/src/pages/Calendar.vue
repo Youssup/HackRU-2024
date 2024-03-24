@@ -181,9 +181,8 @@ async function handleCreateEvent() {
           <div class="card-content">
             <div class="content">
               <p><strong>Event Name:</strong> {{ (selectedEvent as any).title }}</p>
-              <p><strong>Location:</strong> {{ (selectedEvent as any).location.address }}</p>
-              <p><strong>Start:</strong> {{ (selectedEvent as any)?.start }}</p>
-              <p><strong>End:</strong> {{ (selectedEvent as any)?.end }}</p>
+              <p><strong>Start:</strong> {{ (selectedEvent as any).start }}</p>
+              <p><strong>End:</strong> {{ (selectedEvent as any).end }}</p>
             </div>
           </div>
         </div>
