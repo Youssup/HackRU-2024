@@ -37,9 +37,9 @@ function initializeCalendar(inputEvents: Event[] | undefined) {
     plugins: [timeGridPlugin],
     initialView: 'timeGridWeek',
     headerToolbar: {
-      left: 'timeGridWeek,timeGridDay',
-      center: 'prev,today,next',
-      right: 'title'
+      start: 'timeGridWeek,timeGridDay',
+      center: 'title', 
+      end: 'prev,today,next'
     },
     events: inputEvents || [],
     eventClick: handleEventClick
