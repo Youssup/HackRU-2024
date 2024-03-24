@@ -8,7 +8,7 @@ import Login from './LoginBadge.vue';
     <div class="navbar-brand">
       <a class="navbar-item" href="https://bulma.io"> </a>
 
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <a role="button" class="navbar-burger custom-text-color" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -18,10 +18,10 @@ import Login from './LoginBadge.vue';
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <RouterLink to="/home" class="navbar-item">
+        <RouterLink to="/home" class="navbar-item custom-text-color">
           Home
         </RouterLink>
-        <RouterLink to="/calendar" class="navbar-item">
+        <RouterLink to="/calendar" class="navbar-item custom-text-color">
           Calendar
         </RouterLink>
       </div>
@@ -34,7 +34,16 @@ import Login from './LoginBadge.vue';
 </template>
 
 <style scoped>
+.navbar {
+  background-color: #36454F;
+  height: 4em;
+}
+
 .navbar-item.router-link-exact-active {
   border-bottom: 2px solid #000;
+}
+
+.custom-text-color {
+  color: whitesmoke;
 }
 </style>
