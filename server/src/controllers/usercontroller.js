@@ -87,15 +87,8 @@ router.get('/', (request, response, next) => {
 
     response.send(events);
 })
-.post('/event', requireUser(), (request, response, next) => {
-    if (!request.user) {
-        return next({
-            status: 403,
-            message: "Forbidden API usage."
-        });
-    }
-
-    const newEvent = createEvent(request.user.id, request.body)
+.post('/event', (request, response, next) => {
+    const newEvent = createEvent(request.body)
 
     response.send(newEvent);
 })

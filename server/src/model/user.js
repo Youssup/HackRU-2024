@@ -44,15 +44,12 @@ const Address = {
 
 const Event = {
     eventId: 0,
-    eventName: "",
+    title: "",
     eventColor: "",
-    eventDescription: "",
-    eventLocation: Address,
-    eventStartDate: dayjs(),
-    eventEndDate: dayjs(),
-    eventStartTime: dayjs(),
-    eventEndTime: dayjs(),
-    eventIsAllDay: false,
+    description: "",
+    location: Address,
+    start: dayjs(),
+    end: dayjs(),
     invited: []
 }
 // OBJECTS \\ 
@@ -108,8 +105,8 @@ function createUser(inputData) {
 
 // this function is used to create the user with validation
 function registerUser(inputData) {
-    if (inputData.password.length < 12) {
-        throw new Error("Password must be 12 characters long!")
+    if (inputData.password.length < 8) {
+        throw new Error("Password must be 8 characters long")
     }
 
     const exists = data.users.some(us => us.userName === inputData.userName);
@@ -221,17 +218,16 @@ function getInvitedEvents(id) {
 }
 
 // create event
-async function createEvent(id, event) {
-    const user = getById(id);
+async function createEvent(event) {
+    const user = getById(event.id);
 
     if (!user) {
         throw new Error("Cannot find that user!");
     }
 
-    // TODO: check if this event already exists?
+    // TODO: check if this event already exis   ts?
 
     const newEvent = {
-        id: user.events?.length + 1,
         ...event,
     };
 
