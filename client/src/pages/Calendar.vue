@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue';
+import { onMounted, ref, nextTick, computed, type Ref, watchEffect } from 'vue';
 import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { getSession, useLogin } from '../models/session';
-import type { Event, Address } from '../models/users';
+import { type Event, type Address, getDistanceAndTime } from '../models/users';
 import { getUpcomingEvents, createEvent } from '../models/users';
+import axios from 'axios';
 
 const calendarEl = ref(null);
 const session = getSession();
@@ -16,11 +17,22 @@ const state = { calendarEl };
 
 const upcomingEventLocation = ref<Address | null>(null); // Variable to store the location of the upcoming event
 
-const { refresh } = useLogin()
+const { refresh } = useLogin();
+
+let userIp: any;
 
 onMounted(async () => {
   await nextTick();
 
+  fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        userIp = data.ip;
+      })
+      .catch(error => {
+        console.error('Error fetching IP address:', error);
+    });
+    
   initializeCalendar(userEvents.value);
 
   // Fetch the next upcoming event and store its location
@@ -48,6 +60,7 @@ function initializeCalendar(inputEvents: Event[] | undefined) {
 }
 
 const eventModal = ref(false);
+const selectedEventModal = ref(false);
 
 function openEventModal() {
   eventModal.value = true;
@@ -63,25 +76,18 @@ const endDate = ref(0);
 const startTime = ref(0);
 const endTime = ref(0);
 
-/*
-    eventId: 0,
-    title: "",
-    eventColor: "",
-    description: "",
-    location: Address,
-    start: dayjs(),
-    end: dayjs(),
-    invited: []
-*/
+const selectedEvent: Ref<Event | null> = ref(null);
+const realAddress: Ref<Address | null> = ref(null);
+const distance: Ref<number | null> = ref(null);
+const time: Ref<number | null> = ref(null);
 
-const selectedEventModal = ref(false);
-const selectedEvent = ref(null);
 function openSelectedEventModal() {
   selectedEventModal.value = true;
 }
 function closeSelectedEventModal() {
   selectedEventModal.value = false;
 }
+
 function handleEventClick(info: any) {
   selectedEvent.value = info.event;
   openSelectedEventModal();
@@ -121,6 +127,31 @@ async function handleCreateEvent() {
   }
 }
 
+async function getAddressFromIp(ipAddress: string): Promise<Address | null> {
+    try {
+        const response = await axios.get<Address>(`https://ipapi.co/${ipAddress}/json/`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching address:', error);
+        return null;
+    }
+}
+
+const calculateDistanceAndTime = computed(async () => {
+    if (realAddress.value && selectedEvent.value) {
+        const [calculatedDistance, calculatedTime] = await getDistanceAndTime(realAddress.value, selectedEvent.value.location);
+        distance.value = calculatedDistance;
+        time.value = calculatedTime;
+    } else {
+        // If either realAddress or selectedEvent is null or undefined
+        distance.value = null;
+        time.value = null;
+    }
+});
+
+watchEffect(() => {
+    calculateDistanceAndTime.value;
+});
 
 </script>
 
@@ -181,8 +212,8 @@ async function handleCreateEvent() {
           <div class="card-content">
             <div class="content">
               <p><strong>Event Name:</strong> {{ (selectedEvent as any).title }}</p>
-              <p><strong>Start:</strong> {{ (selectedEvent as any).start }}</p>
-              <p><strong>End:</strong> {{ (selectedEvent as any).end }}</p>
+              <p><strong>Distance:</strong> {{ distance }}</p>
+              <p><strong>Estimated Time:</strong> {{ time }}</p>
             </div>
           </div>
         </div>

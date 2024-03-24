@@ -19,7 +19,8 @@
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
-    "dayjs": "^1.11.10"
+    "dayjs": "^1.11.10",
+    "axios": "^1.6.8"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",

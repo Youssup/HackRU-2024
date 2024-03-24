@@ -139,7 +139,7 @@ export async function createEvent(eventData: any): Promise<any> {
   }
 }
 
-async function getDistanceAndTime(address1: Address, address2: Address) {
+export async function getDistanceAndTime(address1: Address, address2: Address) {
   try {
       const result = await api('calculate/locationcalc', { address1, address2 }, 'POST');
       return result; 
