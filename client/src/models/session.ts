@@ -38,7 +38,7 @@ export function useLogin() {
     async login(email: string, password: string): Promise<User | null> {
       const response = await api("users/login", { email, password });
 
-      session.user = response.user;
+      session.user = response?.user;
       session.token = response.token;
 
       router.push("/home");
