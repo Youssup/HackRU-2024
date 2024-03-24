@@ -12,12 +12,9 @@ const session = getSession();
 <template>
   <div class="Sidebar" :class="{ open: isOpen }">
     <article class="panel is-primary">
-      <p class="panel-heading">Primary</p>
+      <p class="panel-heading">Friends List</p>
       <p class="panel-tabs">
       </p>
-      <div class="panel-block">
-        <input class="input is-primary" type="text" placeholder="Find Friends!" />
-      </div>
       <a v-for="friend in session.friends" :key="friend.id" class="panel-block">
           {{ friend.firstName }} {{ friend.lastName }}
       </a>
