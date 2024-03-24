@@ -44,11 +44,11 @@ function handleLogin() {
                     Log in
                 </a>
             </div>
-            <div v-if="session.user" class="navbar-item">
+            <div v-if="session.user" class="navbar-item custom-text-color badge">
+                <div style="margin-right: 10px;">
+                    Welcome, {{ session.user.firstName }} {{ session.user.lastName }}
+                </div>
                 <div class="buttons">
-                    <a class="button is-primary">
-                        <strong>{{ session.user.userName }}</strong>
-                    </a>
                     <a @click="logout" v-if="session.user" class="button is-light">
                         Log out
                     </a>
@@ -116,4 +116,13 @@ function handleLogin() {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.badge {
+  display: flex;
+  align-items: center;
+  line-height: 1em;
+}
+.custom-text-color {
+  color: whitesmoke;
+}
+</style>
