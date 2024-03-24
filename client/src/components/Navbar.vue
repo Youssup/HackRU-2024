@@ -21,7 +21,6 @@ import Sidebar from './Sidebar.vue';
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <Sidebar />
         <RouterLink to="/home" class="navbar-item custom-text-color">
           Home
         </RouterLink>
@@ -35,6 +34,7 @@ import Sidebar from './Sidebar.vue';
 
       <div class="navbar-end">
         <Login/>
+        <Sidebar/>
       </div>
     </div>
   </nav>

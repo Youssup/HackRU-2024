@@ -41,7 +41,7 @@ export function useLogin() {
       session.user = response.user;
       session.token = response.token;
 
-      router.push("/");
+      router.push("/home");
 
       return session.user;
     },

@@ -21,8 +21,9 @@ function closeSignUpModal() {
     signUpModal.value = false;
 }
 
-const password = ref('');
-const email = ref('');
+// TODO: remove from production!
+const password = ref('testing123');
+const email = ref('test@mail.com');
 const username = ref('');
 
 const { login, logout } = useLogin()

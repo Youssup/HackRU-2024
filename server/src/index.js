@@ -8,8 +8,6 @@ const app = express();
 
 const PORT = process.env.PORT ?? 3000;
 
-console.log(__dirname);
-
 app
 .use('/', express.static(path.join( __dirname, '../../client/dist/')))
 .use(express.json())
