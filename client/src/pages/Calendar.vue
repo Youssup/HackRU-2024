@@ -1,32 +1,22 @@
 <script>
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import { Calendar } from '@fullcalendar/core'
+import timeGridPlugin from '@fullcalendar/timegrid'
 
 export default {
-  components: {
-    FullCalendar // make the <FullCalendar> tag available
-  },
-  data() {
-    return {
-      calendarOptions: {
-        plugins: [ dayGridPlugin, interactionPlugin ],
-        initialView: 'dayGridMonth',
-        dateClick: this.handleDateClick,
-        events: [
-          { title: 'event 1', date: '2019-04-01' },
-          { title: 'event 2', date: '2019-04-02' }
-        ]
+  mounted() {
+    const calendar = new Calendar(this.$refs.calendar, {
+      plugins: [timeGridPlugin],
+      initialView: 'timeGridWeek',
+      headerToolbar: {
+        left: 'timeGridWeek,timeGridDay',
+        center: 'title',
+        right: 'prev,today,next'
       }
-    }
-  },
-  methods: {
-    handleDateClick: function(arg) {
-      alert('date click! ' + arg.dateStr)
-    }
+    })
+    calendar.render()
   }
 }
 </script>
 <template>
-  <FullCalendar :options="calendarOptions" />
+  <div ref="calendar"></div>
 </template>
