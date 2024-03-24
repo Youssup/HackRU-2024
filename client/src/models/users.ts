@@ -1,4 +1,5 @@
 import { api } from "./session";
+import dayjs from 'dayjs';
 
 export interface User {
   id?: number;
@@ -61,4 +62,20 @@ export async function getUserEvents(email: string): Promise<Event[] | undefined>
   const newUser = users.find(us => us.email === email);
 
   return newUser?.events;
+}
+
+export async function getUpcomingEvents(email: string, events: number) : Promise<Event[] | undefined> {
+  const users = await getUsers();
+
+  const newUser = users.find(us => us.email === email);
+
+  if (!newUser) return [];
+
+  const now = new Date();
+
+  const futureEvents = newUser.events?.filter(event => new Date(event.eventStartDate) > now);
+
+  futureEvents?.sort((a, b) => new Date(a.eventStartDate).getTime() - new Date(b.eventStartDate).getTime());
+
+  return futureEvents?.slice(0, events);
 }
