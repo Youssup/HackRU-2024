@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import Login from './LoginBadge.vue';
-import Sidebar from './Sidebar.vue';
 </script>
 
 <template>
@@ -27,9 +26,8 @@ import Sidebar from './Sidebar.vue';
         </RouterLink>
       </div>
 
-      <div class="navbar-end">
+      <div class="navbar-end" style="margin-right: 15px;">
         <Login/>
-        <Sidebar/>
       </div>
     </div>
   </nav>
