@@ -225,7 +225,7 @@ async function createEvent(event) {
         throw new Error("Cannot find that user!");
     }
 
-    // TODO: check if this event already exis   ts?
+    // TODO: check if this event already exists?
 
     const newEvent = {
         ...event,
