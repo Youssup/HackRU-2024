@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const path = require('path')
 const userController = require('./controllers/usercontroller');
 const { requireUser, parseAuthorizationToken } = require("./middleware/authorization");
 
@@ -7,7 +8,11 @@ const app = express();
 
 const PORT = process.env.PORT ?? 3000;
 
-app.use(express.json())
+console.log(__dirname);
+
+app
+.use('/', express.static(path.join( __dirname, '../../client/dist/')))
+.use(express.json())
 
 // CORS
 .use((req, res, next) => {
@@ -24,7 +29,10 @@ app.use(express.json())
 // authorization middleware
 .use(parseAuthorizationToken)
 // userscontroller / user part of API
-.use('/api/v1/users', userController);
+.use('/api/v1/users', userController)
+.get('*', (req, res) => {
+    res.sendFile(path.join( __dirname, '../../client/dist/index.html'))
+});
 
 app.use((err, req, res, next) => {
     // TODO: remove in production!!!
