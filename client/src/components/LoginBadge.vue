@@ -31,29 +31,16 @@ const { login, logout } = useLogin()
 function handleLogin() {
     login(email.value, password.value)
 }
-
-/*function validatePassword(password: string) {
-    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    return re.test(password);
-}
-
-function validateEmail(email: string) {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-}
-sign up functions
-*/
-
 </script>
 
 <template>
     <div>
-        <div class="navbar-item">
+        <div class="navbar-item" style="margin-top: 3px;">
             <div v-if="!session.user" class="buttons">
-                <a @click="openSignUpModal" class="button is-primary">
+                <a @click="openSignUpModal" v-if="!session.user" class="button is-primary">
                     <strong>Sign up</strong>
                 </a>
-                <a @click="openLoginModal" class="button is-light">
+                <a @click="openLoginModal" v-if="!session.user" class="button is-light">
                     Log in
                 </a>
             </div>
@@ -62,7 +49,7 @@ sign up functions
                     <a class="button is-primary">
                         <strong>{{ session.user.userName }}</strong>
                     </a>
-                    <a @click="logout" class="button is-light">
+                    <a @click="logout" v-if="session.user" class="button is-light">
                         Log out
                     </a>
                 </div>
@@ -76,44 +63,16 @@ sign up functions
             <div class="box">
                 <div class="field">
                     <label class="label">Username</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="Username" v-model="username">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-user"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                            <i class="fas fa-check"></i>
-                        </span>
-                    </div>
-                    <p class="help is-success">This username is available</p>
+                    <input class="input" type="text" placeholder="Username" v-model="username">
                 </div>
-
                 <div class="field">
                     <label class="label">Email</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-danger" type="email" placeholder="Email" v-model="email">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-                    </div>
-                    <p class="help is-danger">This email is invalid</p>
+                    <input class="input" type="email" placeholder="Email" v-model="email">
                 </div>
 
                 <div class="field">
                     <label class="label">Password</label>
-                    <div class="control has-icons-left has-icons-right">
-                        <input class="input is-danger" type="password" placeholder="Password" v-model="password">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-envelope"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-                    </div>
-                    <p class="help is-danger">This password is invalid</p>
+                    <input class="input" type="password" placeholder="Password" v-model="password">
                 </div>
 
                 <div class="field is-grouped">

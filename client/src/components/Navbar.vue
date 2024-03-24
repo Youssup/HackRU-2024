@@ -7,12 +7,7 @@ import Sidebar from './Sidebar.vue';
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io"> </a>
-
       <a role="button" class="navbar-burger custom-text-color" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -21,13 +16,13 @@ import Sidebar from './Sidebar.vue';
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <RouterLink to="/home" class="navbar-item custom-text-color">
+        <RouterLink to="/home" class="navbar-item" style="color: aliceblue;">
           Home
         </RouterLink>
-        <RouterLink to="/calendar" class="navbar-item custom-text-color">
+        <RouterLink to="/calendar" class="navbar-item" style="color: aliceblue;">
           Calendar
         </RouterLink>
-        <RouterLink to="/suggestion" class="navbar-item custom-text-color">
+        <RouterLink to="/suggestion" class="navbar-item" style="color: aliceblue;">
           Suggestions
         </RouterLink>
       </div>
@@ -47,7 +42,7 @@ import Sidebar from './Sidebar.vue';
 }
 
 .navbar-item.router-link-exact-active {
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid #ffffff;
 }
 
 .custom-text-color {
