@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { getSession, useLogin } from '../models/session'
+import { createUser } from '../models/users'
 
 const session = getSession();
 
@@ -25,11 +26,35 @@ function closeSignUpModal() {
 const password = ref('testing123');
 const email = ref('test@mail.com');
 const username = ref('');
+const firstName = ref('');
+const lastName = ref('');
 
 const { login, logout } = useLogin()
 
 function handleLogin() {
     login(email.value, password.value)
+}
+
+async function handleCreateUser() {
+    try {
+        const newUser = await createUser({
+            userName: username.value,
+            email: email.value,
+            password: password.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+            friends: [],
+            events: []
+        });
+
+        console.log('New user created:', newUser);
+
+        closeSignUpModal();
+
+        handleLogin();
+    } catch (error) {
+        console.error('Error creating user:', error);
+    }
 }
 </script>
 
@@ -71,13 +96,23 @@ function handleLogin() {
                 </div>
 
                 <div class="field">
+                    <label class="label">First Name</label>
+                    <input class="input" type="text" placeholder="First name" v-model="firstName">
+                </div>
+
+                <div class="field">
+                    <label class="label">Last Name</label>
+                    <input class="input" type="text" placeholder="Last name" v-model="lastName">
+                </div>
+
+                <div class="field">
                     <label class="label">Password</label>
                     <input class="input" type="password" placeholder="Password" v-model="password">
                 </div>
 
                 <div class="field is-grouped">
                     <div class="control">
-                        <button @click="closeSignUpModal" class="button is-link">Sign up</button>
+                        <button @click="handleCreateUser" class="button is-link">Sign up</button>
                     </div>
                     <div class="control">
                         <button @click="closeSignUpModal" class="button is-link is-light">Cancel</button>

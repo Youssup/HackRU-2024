@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import * as MyFetch from "./myfetch";
-import { type User, getUserFriends } from "./users"
+import { type User, type Event, getUserFriends, getUserEvents } from "./users"
 
 const session = reactive({
     user: null as User | null,
@@ -11,7 +11,8 @@ const session = reactive({
       type: string,
       text: string
     }[],
-    friends: null as User[] | null
+    friends: null as User[] | null,
+    events: null as Event[] | null
 })
 
 export function api(action: string, body?: unknown, method?: string, headers?: any) {
@@ -42,6 +43,7 @@ export function useLogin() {
       session.user = response?.user;
       session.token = response.token;
       session.friends = await getUserFriends(response?.user) || [];
+      session.events = await getUserEvents(response?.user) || [];
 
       router.push("/home");
 
@@ -51,6 +53,19 @@ export function useLogin() {
       session.user = null;
       
       router.push("/login");
+    },
+    async refresh() {
+      if (session.user) {
+        try {
+          const friends = await getUserFriends(session.user) || [];
+          const events = await getUserEvents(session.user) || [];
+    
+          session.friends = friends;
+          session.events = events;
+        } catch (error) {
+          showError(error);
+        }
+      }
     }
   }
 }

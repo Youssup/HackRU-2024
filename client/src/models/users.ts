@@ -1,5 +1,4 @@
 import { api } from "./session";
-import dayjs from "dayjs";
 
 export interface User {
   id?: number;
@@ -13,17 +12,25 @@ export interface User {
   events?: Event[];
 }
 
+/*
+    eventId: 0,
+    title: "",
+    eventColor: "",
+    description: "",
+    location: Address,
+    start: dayjs(),
+    end: dayjs(),
+    invited: []
+*/
+
 export interface Event {
   eventId: number;
-  eventName: string;
+  title: string;
   eventColor: string;
-  eventDescription: string;
-  eventLocation: Address;
-  eventStartDate: string;
-  eventEndDate: string;
-  eventStartTime: string;
-  eventEndTime: string;
-  eventIsAllDay: boolean;
+  description: string;
+  location: Address;
+  start: string;
+  end: string;
   invited: number[];
 }
 
@@ -56,14 +63,12 @@ export async function doesUsernameExist(userName: string): Promise<boolean> {
   return users.some((user) => user.userName === userName);
 }
 
-export async function getUserEvents(
-  email: string
-): Promise<Event[] | undefined> {
-  const users = await getUsers();
+export async function getUserEvents(user: User): Promise<Event[] | undefined> {
+  if (!user) {
+    return [];
+  }
 
-  const newUser = users.find((us) => us.email === email);
-
-  return newUser?.events;
+  return user?.events;
 }
 
 export async function getUpcomingEvents(
@@ -79,13 +84,13 @@ export async function getUpcomingEvents(
   const now = new Date();
 
   const futureEvents = newUser.events?.filter(
-    (event) => new Date(event.eventStartDate) > now
+    (event) => new Date(event.start) > now
   );
 
   futureEvents?.sort(
     (a, b) =>
-      new Date(a.eventStartDate).getTime() -
-      new Date(b.eventStartDate).getTime()
+      new Date(a.start).getTime() -
+      new Date(b.start).getTime()
   );
 
   return futureEvents?.slice(0, events);
@@ -97,16 +102,39 @@ export async function getUserByID(id: number): Promise<User | undefined> {
   return users.find((us) => us.id === id);
 }
 
-export async function getUserFriends(passedUser: User): Promise<User[] | undefined> {
+export async function getUserFriends(
+  passedUser: User
+): Promise<User[] | undefined> {
   const user = passedUser;
-  
+
   if (!user) return undefined; // Return undefined if the user doesn't exist
-  
+
   const users = await getUsers();
-  
+
   const friendsIds: number[] = user.friends ?? [];
-  
-  const friends: User[] = users.filter(u => friendsIds.includes(u.id ?? -1)); // Filter users based on friend IDs
-  
+
+  const friends: User[] = users.filter((u) => friendsIds.includes(u.id ?? -1)); // Filter users based on friend IDs
+
   return friends;
+}
+
+export async function createUser(userData: any): Promise<any> {
+  try {
+    const response = await api("users/register", userData, "POST");
+    return response;
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
+}
+
+export async function createEvent(eventData: any): Promise<any> {
+  try {
+    const response = await api("users/event", eventData, "POST");
+
+    return response;
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
+  }
 }

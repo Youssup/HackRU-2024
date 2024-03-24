@@ -2,32 +2,37 @@
 import { onMounted, ref, nextTick } from 'vue';
 import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { getSession } from '../models/session';
+import { getSession, useLogin } from '../models/session';
 import type { Event, Address } from '../models/users';
-import { getUserEvents, getUpcomingEvents } from '../models/users';
+import { getUpcomingEvents, createEvent } from '../models/users';
 
 const calendarEl = ref(null);
+const session = getSession();
+
+let userEvents = session.events ?? [];
+
 let calendar;
 const state = { calendarEl };
 
-const session = getSession();
 const upcomingEventLocation = ref<Address | null>(null); // Variable to store the location of the upcoming event
+
+const { refresh } = useLogin()
 
 onMounted(async () => {
   await nextTick();
-  const events = await getUserEvents(session.user?.email || '');
-  initializeCalendar(events);
+
+  initializeCalendar(userEvents);
 
   // Fetch the next upcoming event and store its location
   const upcomingEvents = await getUpcomingEvents(session.user?.email || '', 1);
   if (upcomingEvents) {
-    upcomingEventLocation.value = upcomingEvents[0].eventLocation;
-    console.log(upcomingEvents[0].eventLocation);
+    upcomingEventLocation.value = upcomingEvents[0].location;
+    console.log(upcomingEvents[0].location);
     console.log(upcomingEventLocation.value.address);
   }
 });
 
-function initializeCalendar(events: Event[] | undefined) {
+function initializeCalendar(inputEvents: Event[] | undefined) {
   calendar = new Calendar(state.calendarEl.value!, {
     plugins: [timeGridPlugin],
     initialView: 'timeGridWeek',
@@ -36,7 +41,7 @@ function initializeCalendar(events: Event[] | undefined) {
       center: 'prev,today,next',
       right: 'title'
     },
-    events: events || []
+    events: inputEvents || []
   });
   calendar.render();
 }
@@ -51,20 +56,60 @@ function closeEventModal() {
 }
 
 const name = ref('');
-const location = ref(0);
+const location = ref('');
 const startDate = ref(0);
 const endDate = ref(0);
 const startTime = ref(0);
 const endTime = ref(0);
-const extraTime = ref(0);
 
-/*function addEvent() {
+/*
+    eventId: 0,
+    title: "",
+    eventColor: "",
+    description: "",
+    location: Address,
+    start: dayjs(),
+    end: dayjs(),
+    invited: []
+*/
 
-}*/
+async function handleCreateEvent() {
+  const startDateTime = new Date(startDate.value + 'T' + startTime.value); // startDateTime.toISOString(); 
+  const endDateTime = new Date(endDate.value + 'T' + endTime.value); // endDateTime.toISOString(); 
+    try {
+        const newEvent = await createEvent({
+            title: name.value,
+            start: startDateTime.toISOString().slice(0, -5),
+            end: endDateTime.toISOString().slice(0, -5),
+            description: "", // You might want to add a description here if needed
+            color: "#0000FF",
+            location: {
+                address: location.value,
+                city: "", // Add city if needed
+                coordinates: {
+                    latitude: 0, // Add latitude if needed
+                    longitude: 0 // Add longitude if needed
+                },
+                postalCode: "", // Add postal code if needed
+                state: "" // Add state if needed
+            },
+            invited: [],
+            id: session.user?.id
+        });
+
+        userEvents.push(newEvent);
+
+        await refresh();
+
+        closeEventModal();
+    } catch (error) {
+        console.error('Error creating user:', error);
+    }
+}
 </script>
 
 <template>
-  <div class="input-container">
+  <div class="input-container" v-if="session.user">
     <button @click="openEventModal" class="button is-primary is-rounded" style="margin-bottom: 30px;">Add Event</button>
   </div>
   <div :ref="state.calendarEl" class="calendar-container"></div>
@@ -91,19 +136,15 @@ const extraTime = ref(0);
         </div>
         <div class="field">
           <label class="label">Start Time</label>
-          <input class="input" type="date" placeholder="Start Time" v-model="startTime">
+          <input class="input" type="time" placeholder="Start Time" v-model="startTime">
         </div>
         <div class="field">
           <label class="label">End Time</label>
-          <input class="input" type="date" placeholder="End Time" v-model="endTime">
-        </div>
-        <div class="field">
-          <label class="label">Extra Time</label>
-          <input class="input" type="number" placeholder="Extra Time" v-model="extraTime">
+          <input class="input" type="time" placeholder="End Time" v-model="endTime">
         </div>
         <div class="field is-grouped">
           <div class="control">
-            <button @click="closeEventModal" class="button is-link">Add Event</button>
+            <button @click="handleCreateEvent()" class="button is-link">Add Event</button>
           </div>
           <div class="control">
             <button @click="closeEventModal" class="button is-link is-light">Cancel</button>
